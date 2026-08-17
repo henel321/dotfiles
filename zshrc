@@ -65,7 +65,7 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs history time battery 
 POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
 
 ## time config
-POWERLEVEL9K_TIME_FORMAT="%D{%I:%M:%S %p}"
+#POWERLEVEL9K_TIME_FORMAT="H:M:S"
 
 ## git config (remove extra space from branch icon)
 POWERLEVEL9K_VCS_BRANCH_ICON=$'\uF126'
@@ -212,5 +212,41 @@ for dir in $HOME/.zsh.d $HOME/.zsh.d.$USER $HOME/.zsh.d.$(hostname -s); do
 		done
 	fi
 done
+
+export https_proxy="http://localhost:9000"
+export http_proxy="http://localhost:9000"
+
+findcpu(){
+    sysctl -n machdep.cpu.brand_string
+}
+
+findkernelversion(){
+    uname -mrs
+}
+
+mem=$(sysctl -n hw.memsize)
+
+echo " `tput sgr0`             .,-:;//;:=,                             `tput smso`  Aperture Science Terminal Info             `tput rmso`
+          . :H@@@MM@M#H/.,+%;,
+       ,/X+ +M@@M@MM%=,-%HMMM@X/,                       $(findcpu)
+     -+@MM; SM@@MH+-,;XMMMM@MMMM@+-                     `tput bold`RAM memory:`tput sgr0` $[$mem/1024/1024] MB
+    ;@M@@M- XM@X;. -+XXXXXHHH@M@M#@/.                   `tput bold`Kernel:`tput sgr0` $(findkernelversion)
+  ,%MM@@MH ,@%=            .---=-=:=,.
+  =@#@@@MX .,              -%HXSS%%%+;
+ =-./@M@MS                  .;@MMMM@MM:               `tput smso`  GLaDOS Monitor                             `tput rmso`
+ X@/ -SMM/                    .+MM@@@MS                                             `tput setaf 2`  ____ `tput sgr0`
+,@M@H: :@:                    . =X#@@@@-                `tput bold`System status:`tput sgr0`  `tput setaf 2`On           /   /`tput sgr0`
+,@@@MMX, .                    /H- ;@M@M=                `tput bold`Voice status:`tput sgr0`   `tput setaf 2`On     ___  /   /`tput sgr0`
+.H@@@@M@+,                    %MM+..%#S.                                       `tput setaf 2`\  \/   /`tput sgr0`
+ /MMMM@MMH/.                  XM@MH; =;                 `tput bold`Damaged:       `tput sgr0` `tput setaf 2`No      `tput setaf 2`\     /`tput sgr0`
+  /%+%SXHH@S=              , .H@@@@MX,                  `tput bold`Malfunctioning:`tput sgr0` `tput setaf 3`Maybe    `tput setaf 2`\___/`tput sgr0`
+   .=--------.           -%H.,@@@@@MX,
+    .%MM@@@HHHXXSSS%+- .:MMX =M@@MM%.
+     =XMMM@MM@MM#H;,-+HMM@M+ /MMMX=                   `tput smso`  Date and Time                              `tput rmso`
+       =%@M@M#@S-.=S@MM@@@M; %M%=
+         ':+S+-,/H#MMMMMMM@= ='                         `tput bold`Date:`tput sgr0` $(date +"%A %d %B %Y")
+               =++%%%%+/:-.                             `tput bold`Time:`tput sgr0` $(date +"%T")
+"
+
 
 ## EOF
