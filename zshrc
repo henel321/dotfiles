@@ -21,7 +21,7 @@ if [[ $BREW_HOME != "/usr/local" ]]; then
 fi
 
 ## add various brew "non-g" binaries to the head of the path
-for bindir in $( find $BREW_HOME -type d -name gnubin ); do
+for bindir in ${BREW_HOME}/opt/*/libexec/gnubin(N-/); do
   export PATH="$bindir:${PATH}"
 done
 
@@ -169,13 +169,9 @@ plugins=(
 	mvn
 	node
 	npm
-	nvm
 	macos
 	rsync
 )
-
-## syntax hilighting
-source $BREW_HOME/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 ## run oh-my-zsh
 source $ZSH/oh-my-zsh.sh
@@ -186,6 +182,19 @@ source $ZSH/oh-my-zsh.sh
 ##   $(brew --prefix)/opt/fzf/install
 if [[ -f ~/.fzf.zsh ]]; then
 	source ~/.fzf.zsh
+fi
+
+## useful optional command hooks
+if command -v zoxide >/dev/null 2>&1; then
+	eval "$(zoxide init zsh)"
+fi
+
+if command -v atuin >/dev/null 2>&1; then
+	eval "$(atuin init zsh)"
+fi
+
+if command -v direnv >/dev/null 2>&1; then
+	eval "$(direnv hook zsh)"
 fi
 
 ## use vim
@@ -206,15 +215,28 @@ alias ll='ls --color=auto -CFlh'
 ## Run things in alphabetic order by filename
 for dir in $HOME/.zsh.d $HOME/.zsh.d.$USER $HOME/.zsh.d.$(hostname -s); do
 	if [[ -d $dir ]]; then
-		for file in $(find $dir -name \*.sh | sort); do
+    for file in $dir/*.sh(N); do
 			#echo "Init: $file"
 			source "$file"
 		done
 	fi
 done
 
-export https_proxy="http://localhost:9000"
-export http_proxy="http://localhost:9000"
+## enable proxy explicitly with proxyon; disable with proxyoff
+proxyon(){
+	export https_proxy="http://localhost:9000"
+	export http_proxy="http://localhost:9000"
+	export HTTPS_PROXY="$https_proxy"
+	export HTTP_PROXY="$http_proxy"
+}
+
+proxyoff(){
+	unset https_proxy http_proxy HTTPS_PROXY HTTP_PROXY
+}
+
+if [[ "${AUTO_ENABLE_LOCAL_PROXY:-0}" == "1" ]]; then
+	proxyon
+fi
 
 findcpu(){
     sysctl -n machdep.cpu.brand_string
@@ -226,7 +248,8 @@ findkernelversion(){
 
 mem=$(sysctl -n hw.memsize)
 
-echo " `tput sgr0`             .,-:;//;:=,                             `tput smso`  Aperture Science Terminal Info             `tput rmso`
+if [[ -o interactive && "${SHOW_SPLASH:-1}" == "1" && "${SHLVL:-1}" -eq 1 ]]; then
+	echo " `tput sgr0`             .,-:;//;:=,                             `tput smso`  Aperture Science Terminal Info             `tput rmso`
           . :H@@@MM@M#H/.,+%;,
        ,/X+ +M@@M@MM%=,-%HMMM@X/,                       $(findcpu)
      -+@MM; SM@@MH+-,;XMMMM@MMMM@+-                     `tput bold`RAM memory:`tput sgr0` $[$mem/1024/1024] MB
@@ -247,6 +270,16 @@ echo " `tput sgr0`             .,-:;//;:=,                             `tput sms
          ':+S+-,/H#MMMMMMM@= ='                         `tput bold`Date:`tput sgr0` $(date +"%A %d %B %Y")
                =++%%%%+/:-.                             `tput bold`Time:`tput sgr0` $(date +"%T")
 "
+    	fi
+
+    ## autosuggestions and syntax highlighting should be sourced at the end.
+    if [[ -f $BREW_HOME/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+    	source $BREW_HOME/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    fi
+
+    if [[ -f $BREW_HOME/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    	source $BREW_HOME/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    fi
 
 
 ## EOF

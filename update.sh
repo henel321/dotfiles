@@ -25,4 +25,7 @@ for dir in $HOME/.zsh.d $HOME/.zsh.d.$USER $HOME/.zsh.d.$(hostname -s); do
 	fi
 done
 
+echo "Refreshing brew package list"
+(brew list --formula; brew list --cask) | sort -u > ~/.dotfiles/brew_packages.txt
+
 

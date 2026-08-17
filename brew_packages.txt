@@ -13,8 +13,10 @@ aws-c-s3
 aws-c-sdkutils
 aws-checksums
 awscli
+atuin
 bash
 bash-completion
+bat
 bdw-gc
 berkeley-db@5
 brew-gem
@@ -28,10 +30,13 @@ coreutils
 ctags
 dav1d
 diffutils
+direnv
 docbook
 docbook-xsl
+eza
 docker
 ffmpeg
+fd
 findutils
 fmt
 font-fira-code-nerd-font
@@ -181,6 +186,7 @@ popt
 protobuf
 python@3.14
 readline
+ripgrep
 rsync
 ruby
 s2n
@@ -222,7 +228,9 @@ yamllint
 yarn
 yq
 zimg
+zoxide
 zsh
+zsh-autosuggestions
 zsh-completions
 zsh-syntax-highlighting
 zstd
